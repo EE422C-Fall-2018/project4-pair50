@@ -13,9 +13,6 @@ package assignment4;
  */
 
 
-import java.lang.reflect.Constructor;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 /* see the PDF for descriptions of the methods and fields in this class
@@ -28,15 +25,7 @@ public abstract class Critter {
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-	
-	public static HashSet <String> c = new HashSet<String>();
-	
-	
-	
-	
-	
-	
-	
+
 	// Gets the package name.  This assumes that Critter and its subclasses are all in the same package.
 	static {
 		myPackage = Critter.class.getPackage().toString().split(" ")[1];
@@ -61,7 +50,7 @@ public abstract class Critter {
 	private int x_coord;
 	private int y_coord;
 	
-	protected final void walk(int direction) {//updates energy, updates position, can be called from doTimeStep and fight
+	protected final void walk(int direction) {
 	}
 	
 	protected final void run(int direction) {
@@ -72,7 +61,7 @@ public abstract class Critter {
 	}
 
 	public abstract void doTimeStep();
-	public abstract boolean fight(String opponent);
+	public abstract boolean fight(String oponent);
 	
 	/**
 	 * create and initialize a Critter subclass.
@@ -85,41 +74,6 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-		if(c.isEmpty()) {
-			c.add("Algae");
-			c.add("Craig");
-			c.add("MyCritter1");
-			/*c.add("MyCritter2");
-			c.add("MyCritter3");
-			c.add("MyCritter4");
-			c.add("MyCritter5");*/
-			c.add("MyCritter6");
-			c.add("MyCritter7");
-		}
-		
-		//error no capital letter
-		
-		if(!c.contains(critter_class_name)) {
-			throw new InvalidCritterException(critter_class_name);
-		}
-		
-		try {
-			Class<?> c = Class.forName(critter_class_name);
-			Constructor<?> constructor = c.getConstructor();
-			Object newcritter = constructor.newInstance();
-			
-			((Critter) newcritter).x_coord = getRandomInt(Params.world_width);
-			((Critter) newcritter).y_coord = getRandomInt(Params.world_height);
-			((Critter) newcritter).energy = Params.start_energy;
-			
-			population.add((Critter) newcritter);
-			
-			
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 	}
 	
 	/**
@@ -130,7 +84,7 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
-		
+	
 		return result;
 	}
 	
@@ -218,16 +172,7 @@ public abstract class Critter {
 	}
 	
 	public static void worldTimeStep() {
-		HashMap <Integer [], Critter []> positions  = new HashMap<Integer [], Critter []>();
-		for(Critter c : population) {
-			c.doTimeStep();
-			Integer [] po = new Integer [2];
-			po[0]=c.x_coord; po[1] = c.y_coord;
-			if(!positions.containsKey(po)) {
-				positions.put(po, c);
-			}
-		}
-		
+		// Complete this method.
 	}
 	
 	public static void displayWorld() {
