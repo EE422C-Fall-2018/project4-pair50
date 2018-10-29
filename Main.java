@@ -83,7 +83,7 @@ public class Main {
         				System.out.println("error processing: " + input);
         			}else {
         				 System.out.flush();
-        				break;
+        				return;
         			}
         			continue;
         		case("show"):
@@ -100,9 +100,12 @@ public class Main {
                 					Critter.worldTimeStep();
                 				}
         					}
-            				catch(NumberFormatException e) {
-            					System.out.println("error processing: " + input);
-            				}
+        					catch (IndexOutOfBoundsException e) {
+    							Critter.worldTimeStep();
+
+    						} catch (NumberFormatException e ) {
+    							System.out.println("error processing: " + command);
+    						}
             				
             			}else{
         					Critter.worldTimeStep();
@@ -111,7 +114,7 @@ public class Main {
         			
         		continue;
         		case("seed"):
-        			if(command.length > 2) {
+        			if(command.length != 2) {
         				System.out.println("error processing: " + input);
         			}else {
         				try {
@@ -147,20 +150,32 @@ public class Main {
         			}
         		continue;
         		case("stats"):
-        			if(command.length > 2) {
+        			if(command.length != 2) {
         				System.out.println("error processing: " + input); 
         			}else {
+        				String in = command[1];
+        				List<Critter> result = null;
         				try {
-    						List<Critter> result = Critter.getInstances(command[1]);////?
-    						((Critter)result.get(0).getClass()).runStats(result);
-    						.runStats(result);
-    						if(command[1].equals("Craig")) {
-    							Craig.runStats(result);
-    						}
-    						
+    						result = Critter.getInstances(in);
     					} catch (InvalidCritterException e) {
     						System.out.println("error processing: " + input);
     					}
+        				if(result.size() <= 0) {
+        					System.out.print("No instances of ");
+        					System.out.print(in);
+        					System.out.println(" are alive.");
+        				}
+        				Class<?> crit = null;
+						Class [] list = new Class[1];
+						list[0] = java.util.List.class;
+						try {
+							crit = Class.forName("assignment4." + in);
+							java.lang.reflect.Method runStats = crit.getMethod("runStats", list);
+							runStats.invoke(crit, result);
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
+        				
         			}
 					
 	        		continue;

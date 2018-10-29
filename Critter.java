@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /* see the PDF for descriptions of the methods and fields in this class
  * you may add fields, methods or inner classes to Critter ONLY if you make your additions private
@@ -69,15 +70,34 @@ public abstract class Critter {
 		if(type.equals('x')) {
 			
 			initVal = initVal + steps;
-			if(initVal > Params.world_width || initVal < 0) {
-				initVal = initVal % (Params.world_width + 1);
+			
+			if(initVal == -1) {
+				initVal = Params.world_width-1;
+			}
+			if(initVal == -2) {
+				initVal = Params.world_width-2;
+			}
+			if(initVal == Params.world_width) {
+				initVal = 0;
+			}
+			if(initVal == Params.world_width+1) {
+				initVal = 1;
 			}
 			return initVal;
 		}
 		if(type.equals('y')) {
 			initVal = initVal + steps;
-			if(initVal > Params.world_height || initVal < 0) {
-				initVal = initVal % (Params.world_height + 1);
+			if(initVal == -1) {
+				initVal = Params.world_height-1;
+			}
+			if(initVal == -2) {
+				initVal = Params.world_height-2;
+			}
+			if(initVal == Params.world_height) {
+				initVal = 0;
+			}
+			if(initVal == Params.world_height+1) {
+				initVal = 1;
 			}
 			return initVal;
 		}
@@ -115,7 +135,7 @@ public abstract class Critter {
 					}else {
 						this.x_coord = xpos;
 					}
-					
+					break;
 					
 				case 1:
 					ypos = step('y', -1, this.y_coord);
@@ -129,7 +149,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 2:
 					ypos = step('y', -1, this.y_coord);
 					xpos = this.x_coord;
@@ -142,7 +162,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 3:
 					ypos = step('y', -1, this.y_coord);
 					xpos = step('x', -1, this.x_coord); 
@@ -155,7 +175,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 4:
 					xpos = step('x', -1, this.x_coord);
 					ypos = this.y_coord;
@@ -168,7 +188,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 5:
 					ypos = step('y', 1, this.y_coord);
 					xpos = step('x', -1, this.x_coord); 
@@ -181,7 +201,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 6:
 					ypos = step('y', 1, this.y_coord);
 					xpos = this.x_coord;
@@ -194,6 +214,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
+					break;
 				case 7:
 					ypos = step('y', 1, this.y_coord);
 					xpos = step('x', 1, this.x_coord);
@@ -206,7 +227,7 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 			}
 			this.moved = true;
 		}
@@ -402,23 +423,23 @@ public abstract class Critter {
 		}
 		
 		//error no capital letter
-		
+		Class<?> fefe = null;
 		if(!c.contains(critter_class_name)) {
 			throw new InvalidCritterException(critter_class_name);
 		}
 		
 		try {
-			Class<?> c = Class.forName(critter_class_name);
-			Constructor<?> constructor = c.getConstructor();
-			Object newcritter = constructor.newInstance();
+			fefe = Class.forName("assignment4." + critter_class_name);//isnt finding class name
+			Constructor<?> construct = fefe.getConstructor();
+			Object newcrit = construct.newInstance();
 			
-			((Critter) newcritter).x_coord = getRandomInt(Params.world_width);
-			((Critter) newcritter).y_coord = getRandomInt(Params.world_height);
-			((Critter) newcritter).energy = Params.start_energy;
-			((Critter) newcritter).moved = false;
+			((Critter) newcrit).x_coord = getRandomInt(Params.world_width);
+			((Critter) newcrit).y_coord = getRandomInt(Params.world_height);
+			((Critter) newcrit).energy = Params.start_energy;
+			((Critter) newcrit).moved = false;
 			
-			population.add((Critter) newcritter);
-			
+			population.add((Critter) newcrit);
+			updatePositions();
 			
 		} 
 		catch (Exception e) {
@@ -434,14 +455,20 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
-		List<Critter> result = new java.util.ArrayList<Critter>();
-		
-		for(Critter c: population) { ///?
-			if(c.getClass().toString().equals(critter_class_name)) {
-				result.add(c);
+		Class<?> crit = null;
+		try {
+			crit = Class.forName("assignment4." + critter_class_name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		List<Critter> instances = new java.util.ArrayList<Critter>();
+
+		for (Critter a : population) {
+			if (crit.isInstance(a)) {
+				instances.add(a);
 			}
 		}
-		return result;
+		return instances;
 	}
 	
 	/**
@@ -530,11 +557,12 @@ public abstract class Critter {
 	
 	public static void updatePositions() {
 		positions.clear();
+		Set<Integer[]> keys = positions.keySet();
 		for(Critter c: population) {
 			Integer [] po = new Integer [2];
 			po[0]=c.x_coord; po[1] = c.y_coord;
 			
-			if(!positions.containsKey(po)) {
+			if(!keys.contains(po)) {
 				ArrayList <Critter> clist = new ArrayList<Critter>();
 				clist.add(c);
 				positions.put(po, clist);
@@ -624,18 +652,21 @@ public abstract class Critter {
 			System.out.print("-");
 		}
 		System.out.println("+");
-		
+		Set<Integer[]> keys = positions.keySet();
 		for(int row=0;row<Params.world_height;row++) {
 			System.out.print("|");
 			Integer [] pos = new Integer [2];
 			 
 			for(int col=0; col < Params.world_width; col++) {
-				pos[0]=col;
-				pos[1]=row;
-				if(positions.containsKey(pos)) {
-					System.out.print(positions.get(pos).get(0).toString());
-				}else {
-					System.out.print("");
+				boolean printed = false;
+				for(Critter c: population) {
+					if (c.x_coord==col && c.y_coord==row &&!printed) {
+						System.out.print(c.toString());
+						printed = true;
+					}
+				}
+				if(!printed) {
+					System.out.print(" ");
 				}
 			}		
 			System.out.println("|");
