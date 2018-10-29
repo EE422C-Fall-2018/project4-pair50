@@ -70,8 +70,10 @@ public abstract class Critter {
 		if(type.equals('x')) {
 			
 			initVal = initVal + steps;
-			
-			if(initVal == -1) {
+			if(initVal >= Params.world_width || initVal < 0) {
+				initVal = Math.abs(initVal % Params.world_width);
+			}
+			/*if(initVal == -1) {
 				initVal = Params.world_width-1;
 			}
 			if(initVal == -2) {
@@ -82,11 +84,14 @@ public abstract class Critter {
 			}
 			if(initVal == Params.world_width+1) {
 				initVal = 1;
-			}
+			}*/
 			return initVal;
 		}
 		if(type.equals('y')) {
 			initVal = initVal + steps;
+			if(initVal >= Params.world_height || initVal < 0) {
+				initVal = Math.abs(initVal % Params.world_height);
+			}/*
 			if(initVal == -1) {
 				initVal = Params.world_height-1;
 			}
@@ -98,7 +103,7 @@ public abstract class Critter {
 			}
 			if(initVal == Params.world_height+1) {
 				initVal = 1;
-			}
+			}*/
 			return initVal;
 		}
 		return -1;
@@ -652,15 +657,15 @@ public abstract class Critter {
 			System.out.print("-");
 		}
 		System.out.println("+");
-		Set<Integer[]> keys = positions.keySet();
+		
 		for(int row=0;row<Params.world_height;row++) {
 			System.out.print("|");
-			Integer [] pos = new Integer [2];
+			
 			 
 			for(int col=0; col < Params.world_width; col++) {
 				boolean printed = false;
 				for(Critter c: population) {
-					if (c.x_coord==col && c.y_coord==row &&!printed) {
+					if (c.x_coord==col && c.y_coord==row && !printed) {
 						System.out.print(c.toString());
 						printed = true;
 					}
