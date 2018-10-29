@@ -50,7 +50,7 @@ public class ArvinCritter2 extends Critter {
 			avg_energy += r.getEnergy();
 		}
 		avg_energy /= num_crits;
-		System.out.println("" + num_crits + " total ArvinCritter2       ");
+		System.out.println(list.size() + "total ArvinCritter2s");
 		System.out.print("Average energy: " + avg_energy + "\n");
 	}
 

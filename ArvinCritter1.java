@@ -62,7 +62,7 @@ public class ArvinCritter1 extends Critter{
 			ArvinCritter1 crit = (ArvinCritter1) obj;
 			total_fights += crit.numFights;
 		}
-		System.out.println("Total number of ArvinCritter1s: " + list.size());
+		System.out.println(list.size() + "total ArvinCritter1s");
 		System.out.println("Total number of fights: " + total_fights);
 	}
 }
