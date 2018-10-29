@@ -73,6 +73,7 @@ public class Main {
         
         while(true) {
         	System.out.print("critters>");
+        	//System.out.println(Critter.positions.keySet());
         	String input = kb.nextLine(); //kb.next();
         	input.toLowerCase();
         	String [] command = input.split(" ");
@@ -100,12 +101,9 @@ public class Main {
                 					Critter.worldTimeStep();
                 				}
         					}
-        					catch (IndexOutOfBoundsException e) {
-    							Critter.worldTimeStep();
-
-    						} catch (NumberFormatException e ) {
-    							System.out.println("error processing: " + command);
-    						}
+            				catch(NumberFormatException e) {
+            					System.out.println("error processing: " + input);
+            				}
             				
             			}else{
         					Critter.worldTimeStep();
@@ -156,26 +154,27 @@ public class Main {
         				String in = command[1];
         				List<Critter> result = null;
         				try {
-    						result = Critter.getInstances(in);
-    					} catch (InvalidCritterException e) {
+        					result = Critter.getInstances(in);
+        					
+    						}
+    						
+    					catch (InvalidCritterException e) {
     						System.out.println("error processing: " + input);
     					}
-        				if(result.size() <= 0) {
-        					System.out.print("No instances of ");
-        					System.out.print(in);
-        					System.out.println(" are alive.");
-        				}
+        				
+        			
+        				
+
         				Class<?> crit = null;
 						Class [] list = new Class[1];
 						list[0] = java.util.List.class;
 						try {
-							crit = Class.forName("assignment4." + in);
+							crit = Class.forName(myPackage + "." + in);
 							java.lang.reflect.Method runStats = crit.getMethod("runStats", list);
 							runStats.invoke(crit, result);
 						}catch(Exception e) {
 							e.printStackTrace();
 						}
-        				
         			}
 					
 	        		continue;

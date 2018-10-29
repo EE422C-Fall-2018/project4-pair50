@@ -30,7 +30,7 @@ public abstract class Critter {
 	private static String myPackage;
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
-	public static HashMap <Integer [], ArrayList <Critter>> positions  = new HashMap<Integer [], ArrayList <Critter> >();
+	public static HashMap <Key, List<Critter>> positions  = new HashMap<Key, List<Critter> >();
 	public static HashSet <String> c = new HashSet<String>();
 	
 	
@@ -68,12 +68,12 @@ public abstract class Critter {
 	private final int step(Character type, int steps, int initVal) {
 		
 		if(type.equals('x')) {
-			
+			System.out.println("steps: x " + "step size: " + steps+ "initval" + initVal);
 			initVal = initVal + steps;
-			if(initVal >= Params.world_width || initVal < 0) {
-				initVal = Math.abs(initVal % Params.world_width);
-			}
-			/*if(initVal == -1) {
+//			if(initVal >= Params.world_width || initVal < 0) {
+//				initVal = Math.abs(initVal % Params.world_width);
+//			}
+			if(initVal == -1) {
 				initVal = Params.world_width-1;
 			}
 			if(initVal == -2) {
@@ -84,36 +84,39 @@ public abstract class Critter {
 			}
 			if(initVal == Params.world_width+1) {
 				initVal = 1;
-			}*/
-			return initVal;
+			}
+			
 		}
 		if(type.equals('y')) {
+			System.out.println("steps: y " + "step size: " + steps+ " initval " + initVal);
 			initVal = initVal + steps;
-			if(initVal >= Params.world_height || initVal < 0) {
-				initVal = Math.abs(initVal % Params.world_height);
-			}/*
+//			if(initVal >= Params.world_height || initVal < 0) {
+//				initVal = Math.abs(initVal % Params.world_height);
+//			}
 			if(initVal == -1) {
-				initVal = Params.world_height-1;
+				initVal = Params.world_width-1;
 			}
 			if(initVal == -2) {
-				initVal = Params.world_height-2;
+				initVal = Params.world_width-2;
 			}
-			if(initVal == Params.world_height) {
+			if(initVal == Params.world_width) {
 				initVal = 0;
 			}
-			if(initVal == Params.world_height+1) {
+			if(initVal == Params.world_width+1) {
 				initVal = 1;
-			}*/
-			return initVal;
+			}
+			
 		}
-		return -1;
+		System.out.println("new pos" + initVal);
+		return initVal;
 	}
 	
 	private final boolean hasCritterthere(int x, int y) {
-		
-		Integer [] pos = new Integer [2];
-		pos[0] = x;
-		pos[1] = y;
+		System.out.println("hascritterthere");
+		Key pos = new Key(x,y);
+//		Integer [] pos = new Integer [2];
+//		pos[0] = x;
+//		pos[1] = y;
 		
 		if(positions.get(pos).size() > 0){
 			return true;
@@ -143,8 +146,8 @@ public abstract class Critter {
 					break;
 					
 				case 1:
-					ypos = step('y', -1, this.y_coord);
 					xpos = step('x', 1, this.x_coord); 
+					ypos = step('y', -1, this.y_coord);
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -156,8 +159,8 @@ public abstract class Critter {
 					}
 					break;
 				case 2:
-					ypos = step('y', -1, this.y_coord);
 					xpos = this.x_coord;
+					ypos = step('y', -1, this.y_coord);
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -169,8 +172,9 @@ public abstract class Critter {
 					}
 					break;
 				case 3:
+					xpos = step('x', -1, this.x_coord);
 					ypos = step('y', -1, this.y_coord);
-					xpos = step('x', -1, this.x_coord); 
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -195,8 +199,9 @@ public abstract class Critter {
 					}
 					break;
 				case 5:
-					ypos = step('y', 1, this.y_coord);
 					xpos = step('x', -1, this.x_coord); 
+					ypos = step('y', 1, this.y_coord);
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -208,8 +213,9 @@ public abstract class Critter {
 					}
 					break;
 				case 6:
-					ypos = step('y', 1, this.y_coord);
 					xpos = this.x_coord;
+					ypos = step('y', 1, this.y_coord);
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -221,8 +227,9 @@ public abstract class Critter {
 					}
 					break;
 				case 7:
-					ypos = step('y', 1, this.y_coord);
 					xpos = step('x', 1, this.x_coord);
+					ypos = step('y', 1, this.y_coord);
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -233,6 +240,7 @@ public abstract class Critter {
 						this.y_coord = ypos;
 					}
 					break;
+					
 			}
 			this.moved = true;
 		}
@@ -258,10 +266,11 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 1:
-					ypos = step('y', -2, this.y_coord);
 					xpos = step('x', 2, this.x_coord); 
+					ypos = step('y', -2, this.y_coord);
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -271,10 +280,11 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 2:
-					ypos = step('y', -2, this.y_coord);
 					xpos = this.x_coord;
+					ypos = step('y', -2, this.y_coord);
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -284,10 +294,11 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 3:
+					xpos = step('x', -2, this.x_coord); 
 					ypos = step('y', -2, this.y_coord);
-					xpos = step('x', -2, this.x_coord); 
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -297,10 +308,11 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 4:
+					xpos = step('x', -2, this.x_coord); 
 					ypos = this.y_coord;
-					xpos = step('x', -2, this.x_coord); 
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -310,10 +322,11 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 5:
-					ypos = step('y', 2, this.y_coord);
 					xpos = step('x', -2, this.x_coord); 
+					ypos = step('y', 2, this.y_coord);
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -323,23 +336,11 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
-					
+					break;
 				case 6:
-					ypos = step('y', 2, this.y_coord);
 					xpos = this.x_coord;
-					if(this.inFight) {
-						if(!hasCritterthere(xpos,ypos)) {
-							this.x_coord = xpos;
-							this.y_coord = ypos;
-						}
-					}else {
-						this.x_coord = xpos;
-						this.y_coord = ypos;
-					}
-					
-				case 7:
 					ypos = step('y', 2, this.y_coord);
-					xpos = step('x', 2, this.x_coord); 
+					
 					if(this.inFight) {
 						if(!hasCritterthere(xpos,ypos)) {
 							this.x_coord = xpos;
@@ -349,13 +350,28 @@ public abstract class Critter {
 						this.x_coord = xpos;
 						this.y_coord = ypos;
 					}
+					break;
+				case 7:
+					xpos = step('x', 2, this.x_coord); 
+					ypos = step('y', 2, this.y_coord);
 					
+					if(this.inFight) {
+						if(!hasCritterthere(xpos,ypos)) {
+							this.x_coord = xpos;
+							this.y_coord = ypos;
+						}
+					}else {
+						this.x_coord = xpos;
+						this.y_coord = ypos;
+					}
+					break;
 			}
 			this.moved = true;
 		}
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
+		System.out.println("reproducing");
 		if(!(this.energy > Params.min_reproduce_energy)) {
 			return;
 		}
@@ -366,35 +382,35 @@ public abstract class Critter {
 			
 			offspring.x_coord = step('x', 1, this.x_coord);
 			offspring.y_coord = this.y_coord;
-			
+			break;
 		case 1:
 			offspring.y_coord = step('y', -1, this.y_coord);
 			offspring.x_coord = step('x', 1, this.x_coord); 			
-			
+			break;
 		case 2:
 			offspring.y_coord = step('y', -1, this.y_coord);
 			offspring.x_coord = this.x_coord;
-			
+			break;
 		case 3:
 			offspring.y_coord = step('y', -1, this.y_coord);
 			offspring.x_coord = step('x', -1, this.x_coord); 
-			
+			break;
 		case 4:
 			offspring.x_coord = step('x', -1, this.x_coord);
 			offspring.y_coord = this.y_coord;
-			
+			break;
 		case 5:
 			offspring.y_coord = step('y', 1, this.y_coord);
 			offspring.x_coord = step('x', -1, this.x_coord); 
-			
+			break;
 		case 6:
 			offspring.y_coord = step('y', 1, this.y_coord);
 			offspring.x_coord = this.x_coord;
-			
+			break;
 		case 7:
 			offspring.y_coord = step('y', 1, this.y_coord);
 			offspring.x_coord = step('x', 1, this.x_coord);
-	
+			break;
 	}
 		
 		babies.add(offspring);
@@ -425,6 +441,7 @@ public abstract class Critter {
 			c.add("MyCritter5");*/
 			c.add("MyCritter6");
 			c.add("MyCritter7");
+			c.add("ArvinCritter1");
 		}
 		
 		//error no capital letter
@@ -434,7 +451,7 @@ public abstract class Critter {
 		}
 		
 		try {
-			fefe = Class.forName("assignment4." + critter_class_name);//isnt finding class name
+			fefe  = Class.forName(Critter.myPackage + "." + critter_class_name);
 			Constructor<?> construct = fefe.getConstructor();
 			Object newcrit = construct.newInstance();
 			
@@ -442,7 +459,8 @@ public abstract class Critter {
 			((Critter) newcrit).y_coord = getRandomInt(Params.world_height);
 			((Critter) newcrit).energy = Params.start_energy;
 			((Critter) newcrit).moved = false;
-			
+			System.out.println("new crit x coord:" + ((Critter)newcrit).x_coord);
+			System.out.println("new crit y coord:" + ((Critter)newcrit).y_coord);
 			population.add((Critter) newcrit);
 			updatePositions();
 			
@@ -462,13 +480,12 @@ public abstract class Critter {
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		Class<?> crit = null;
 		try {
-			crit = Class.forName("assignment4." + critter_class_name);
+			crit = Class.forName(Critter.myPackage +"." + critter_class_name);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		List<Critter> instances = new java.util.ArrayList<Critter>();
-
-		for (Critter a : population) {
+ 		for (Critter a : population) {
 			if (crit.isInstance(a)) {
 				instances.add(a);
 			}
@@ -562,17 +579,21 @@ public abstract class Critter {
 	
 	public static void updatePositions() {
 		positions.clear();
-		Set<Integer[]> keys = positions.keySet();
+		System.out.println("updating world");
+		//Set<Integer[]> keys = positions.keySet();
 		for(Critter c: population) {
-			Integer [] po = new Integer [2];
-			po[0]=c.x_coord; po[1] = c.y_coord;
+			Key po = new Key(c.x_coord,c.y_coord);
+//			Integer [] po = new Integer [2];
+//			po[0]=c.x_coord; po[1] = c.y_coord;
 			
-			if(!keys.contains(po)) {
-				ArrayList <Critter> clist = new ArrayList<Critter>();
+			if(!(positions.containsKey(po))) {
+				List <Critter> clist = new ArrayList<Critter>();
 				clist.add(c);
 				positions.put(po, clist);
+				System.out.println("doesn't contain key");
 			}else {
-				ArrayList <Critter> clist = positions.get(po);
+				System.out.println("contains key");
+				List <Critter> clist = positions.get(po);
 				clist.add(c);
 				positions.put(po, clist);
 			}
@@ -587,7 +608,7 @@ public abstract class Critter {
 		}
 		
 		updatePositions();
-		for(ArrayList<Critter> crit: positions.values()) {
+		for(List<Critter> crit: positions.values()) {
 			boolean aFight;
 			boolean bFight;
 			int aDice;
@@ -597,6 +618,8 @@ public abstract class Critter {
 				Critter a = crit.get(0);
 				Critter b = crit.get(nextOp);
 				if((a.energy > 0) && (b.energy > 0) && (a.x_coord == b.x_coord) && (a.y_coord == b.y_coord)){
+					System.out.println("Fighting");
+					System.out.println("a energy " + a.energy + " b energy " +b.energy);
 					while(nextOp < crit.size()) {
 						b = crit.get(nextOp);
 						aFight = a.fight(b.toString());
@@ -612,13 +635,18 @@ public abstract class Critter {
 							bDice = Critter.getRandomInt(b.energy);
 						}
 						if(aDice >= bDice) { //remove loser?
+							System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is b");
 							a.energy = a.energy + (b.energy/2);
 							b.energy = 0;
+							System.out.println("a energy " + a.energy + "b energy " +b.energy);
 						}
 						if(bDice > aDice) {
+							System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is a");
 							b.energy = b.energy + (a.energy/2);
 							a.energy = 0;
+							System.out.println("a energy " + a.energy + " b energy " +b.energy);
 							a = b;
+							
 						}
 						nextOp ++;
 					}
@@ -634,21 +662,21 @@ public abstract class Critter {
 		}
 		babies.clear();
 		
-		for(Critter c: population) {
-			if(c.energy <= 0) {
-				population.remove(c);
+		for(int i=0;i<population.size();i++) {
+			if(population.get(i).energy <= 0) {
+				population.remove(i);
 			}
 		}
-		for(int i=0;i<Params.refresh_algae_count;i++) {
-			try {
-				Critter.makeCritter("Algae");//??? correct
-				
-			}
-			catch(InvalidCritterException e) {
-				e.printStackTrace();
-			}
-			
-		}
+//		for(int i=0;i<Params.refresh_algae_count;i++) {
+//			try {
+//				Critter.makeCritter("Algae");//??? correct
+//				
+//			}
+//			catch(InvalidCritterException e) {
+//				e.printStackTrace();
+//			}
+//			
+//		}
 	}
 	
 	public static void displayWorld() { //multiple on one position
@@ -657,22 +685,33 @@ public abstract class Critter {
 			System.out.print("-");
 		}
 		System.out.println("+");
-		
+		//Set<Integer[]> keys = positions.keySet();
 		for(int row=0;row<Params.world_height;row++) {
 			System.out.print("|");
+			//Integer [] pos = new Integer [2];
 			
-			 
 			for(int col=0; col < Params.world_width; col++) {
-				boolean printed = false;
-				for(Critter c: population) {
-					if (c.x_coord==col && c.y_coord==row && !printed) {
-						System.out.print(c.toString());
-						printed = true;
-					}
-				}
-				if(!printed) {
+				Key pos = new Key(col,row);
+//				pos[0]=col;
+//				pos[1]=row;
+				if(positions.containsKey(pos)) {
+					List <Critter> c = positions.get(pos);
+					Critter cr = c.get(0);
+					System.out.print(cr.toString());
+				}else {
 					System.out.print(" ");
 				}
+				
+//				boolean printed = false;
+//				for(Critter c: population) {
+//					if (c.x_coord==col && c.y_coord==row &&!printed) {
+//						System.out.print(c.toString());
+//						printed = true;
+//					}
+//				}
+//				if(!printed) {
+//					System.out.print(" ");
+//				}
 			}		
 			System.out.println("|");
 		}
