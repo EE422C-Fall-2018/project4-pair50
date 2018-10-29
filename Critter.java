@@ -15,7 +15,6 @@ package assignment4;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -334,6 +333,46 @@ public abstract class Critter {
 		if(!(this.energy > Params.min_reproduce_energy)) {
 			return;
 		}
+		offspring.energy = this.energy/2;
+		this.energy = (int)Math.ceil(this.energy/2);
+		switch(direction) {
+		case 0:
+			
+			offspring.x_coord = step('x', 1, this.x_coord);
+			offspring.y_coord = this.y_coord;
+			
+		case 1:
+			offspring.y_coord = step('y', -1, this.y_coord);
+			offspring.x_coord = step('x', 1, this.x_coord); 			
+			
+		case 2:
+			offspring.y_coord = step('y', -1, this.y_coord);
+			offspring.x_coord = this.x_coord;
+			
+		case 3:
+			offspring.y_coord = step('y', -1, this.y_coord);
+			offspring.x_coord = step('x', -1, this.x_coord); 
+			
+		case 4:
+			offspring.x_coord = step('x', -1, this.x_coord);
+			offspring.y_coord = this.y_coord;
+			
+		case 5:
+			offspring.y_coord = step('y', 1, this.y_coord);
+			offspring.x_coord = step('x', -1, this.x_coord); 
+			
+		case 6:
+			offspring.y_coord = step('y', 1, this.y_coord);
+			offspring.x_coord = this.x_coord;
+			
+		case 7:
+			offspring.y_coord = step('y', 1, this.y_coord);
+			offspring.x_coord = step('x', 1, this.x_coord);
+	
+	}
+		
+		babies.add(offspring);
+		
 	}
 
 	public abstract void doTimeStep();
@@ -397,6 +436,11 @@ public abstract class Critter {
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		List<Critter> result = new java.util.ArrayList<Critter>();
 		
+		for(Critter c: population) { ///?
+			if(c.getClass().toString().equals(critter_class_name)) {
+				result.add(c);
+			}
+		}
 		return result;
 	}
 	
@@ -434,7 +478,7 @@ public abstract class Critter {
 	 * to the x_coord and y_coord functions, then you MUST update these setter functions
 	 * so that they correctly update your grid/data structure.
 	 */
-	static abstract class TestCritter extends Critter {
+	static abstract class TestCritter extends Critter {///?? do we need to update
 		protected void setEnergy(int new_energy_value) {
 			super.energy = new_energy_value;
 		}
@@ -445,6 +489,7 @@ public abstract class Critter {
 		
 		protected void setY_coord(int new_y_coord) {
 			super.y_coord = new_y_coord;
+			
 		}
 		
 		protected int getX_coord() {
@@ -561,9 +606,44 @@ public abstract class Critter {
 				population.remove(c);
 			}
 		}
+		for(int i=0;i<Params.refresh_algae_count;i++) {
+			try {
+				Critter.makeCritter("Algae");//??? correct
+				
+			}
+			catch(InvalidCritterException e) {
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
-	public static void displayWorld() {
-		// Complete this method.
+	public static void displayWorld() { //multiple on one position
+		System.out.print("+");
+		for(int i = 0; i<Params.world_width;i++) {
+			System.out.print("-");
+		}
+		System.out.println("+");
+		
+		for(int row=0;row<Params.world_height;row++) {
+			System.out.print("|");
+			Integer [] pos = new Integer [2];
+			 
+			for(int col=0; col < Params.world_width; col++) {
+				pos[0]=col;
+				pos[1]=row;
+				if(positions.containsKey(pos)) {
+					System.out.print(positions.get(pos).get(0).toString());
+				}else {
+					System.out.print("");
+				}
+			}		
+			System.out.println("|");
+		}
+		System.out.print("+");
+		for(int i = 0; i<Params.world_width;i++) {
+			System.out.print("-");
+		}
+		System.out.println("+");
 	}
 }

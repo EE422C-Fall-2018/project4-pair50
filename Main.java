@@ -12,6 +12,7 @@ package assignment4;
  * Fall 2016
  */
 
+import java.util.List;
 import java.util.Scanner;
 import java.io.*;
 
@@ -70,10 +71,108 @@ public class Main {
         /* Do not alter the code above for your submission. */
         /* Write your code below. */
         
+        while(true) {
+        	System.out.print("critters>");
+        	String input = kb.nextLine(); //kb.next();
+        	input.toLowerCase();
+        	String [] command = input.split(" ");
+
+        	switch(command[0]) {//? what if quit and other command
+        		case("quit"):
+        			if(command.length > 1) {
+        				System.out.println("error processing: " + input);
+        			}else {
+        				 System.out.flush();
+        				break;
+        			}
+        			continue;
+        		case("show"):
+        			Critter.displayWorld();
+        		continue;
+        		case("step"):
+        			if(command.length > 2) {
+        				System.out.println("error processing: " + input);
+        			}else {
+        				if(command.length > 1) {
+        					try {
+        						int steps = Integer.parseInt(command[1]);
+        						for(int i=0; i<steps; i++) {
+                					Critter.worldTimeStep();
+                				}
+        					}
+            				catch(NumberFormatException e) {
+            					System.out.println("error processing: " + input);
+            				}
+            				
+            			}else{
+        					Critter.worldTimeStep();
+        				}
+        			}
+        			
+        		continue;
+        		case("seed"):
+        			if(command.length > 2) {
+        				System.out.println("error processing: " + input);
+        			}else {
+        				try {
+        					int seed = Integer.parseInt(command[1]);
+                			Critter.setSeed(seed);
+        				}
+        				catch(NumberFormatException e) {
+            					System.out.println("error processing: " + input);
+            				}
+        			}
+        			
+        			continue;
+        		case("make"):
+        			if(command.length > 3) {
+        				System.out.println("error processing: " + input);
+        			}else if(command.length > 2) {
+        				try {
+        					int num = Integer.parseInt(command[2]);
+        					for(int i=0;i<num;i++) {
+        						Critter.makeCritter(command[1]);
+        					}
+							
+						} catch (Exception e) {//exception right?
+							System.out.println("error processing: " + input); 
+						}
+        			}else {
+        				try {
+        					Critter.makeCritter(command[1]);
+        				}
+        				catch (Exception e) {
+							System.out.println("error processing: " + input); 
+						}
+        			}
+        		continue;
+        		case("stats"):
+        			if(command.length > 2) {
+        				System.out.println("error processing: " + input); 
+        			}else {
+        				try {
+    						List<Critter> result = Critter.getInstances(command[1]);////?
+    						((Critter)result.get(0).getClass()).runStats(result);
+    						.runStats(result);
+    						if(command[1].equals("Craig")) {
+    							Craig.runStats(result);
+    						}
+    						
+    					} catch (InvalidCritterException e) {
+    						System.out.println("error processing: " + input);
+    					}
+        			}
+					
+	        		continue;
+	        		default:
+	        			System.out.println("invalid command: " + input);
+	        	}
+	        	continue;
+        }
         // System.out.println("GLHF");
         
         /* Write your code above */
-        System.out.flush();
+       
 
     }
 }
