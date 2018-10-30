@@ -59,7 +59,10 @@ public abstract class Critter {
 	public String toString() { return ""; }
 	
 	private int energy = 0;
-	protected int getEnergy() { return energy; }
+	protected int getEnergy() { 
+		return energy;
+		
+	}
 	
 	private int x_coord;
 	private int y_coord;
@@ -115,13 +118,15 @@ public abstract class Critter {
 	private final boolean hasCritterthere(int x, int y) {
 		//System.out.println("hascritterthere");
 		Key pos = new Key(x,y);
-		
-		List<Critter> crit = positions.get(pos);
-		for(Critter c: crit ) {
-			if(!(c.energy <= 0)) {
-				return true;
+		if(positions.containsKey(pos)) {
+			List<Critter> crit = positions.get(pos);
+			for(Critter c: crit ) {
+				if(!(c.energy <= 0)) {
+					return true;
+				}
 			}
 		}
+		
 		return false;
 	}
 	
@@ -664,8 +669,11 @@ public abstract class Critter {
 		
 		for(int i=0;i<population.size();i++) {
 			//System.out.println(population.size());
-			if(population.get(i).energy <= 0) {
-				population.remove(i);
+			if(population.get(i) != null)
+			{
+				if(population.get(i).energy <= 0) {
+					population.remove(i);
+				}
 			}
 		}
 		for(int i=0;i<Params.refresh_algae_count;i++) {
