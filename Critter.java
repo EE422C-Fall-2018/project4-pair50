@@ -1,15 +1,14 @@
 package assignment4;
 /* CRITTERS Critter.java
  * EE422C Project 4 submission by
- * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
- * Slip days used: <0>
- * Fall 2016
+ * Kayla Tran
+ * knt627
+ * 16345
+ * Arvin Bhatti
+ * ab62733
+ * 16345
+ * Slip days used: <2>
+ * Fall 2018
  */
 
 
@@ -485,11 +484,10 @@ public abstract class Critter {
 				}
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
-			return instances;
+			e.printStackTrace();
+			//return instances;
 		}
-		
- 		
+
 		return instances;
 	}
 	
@@ -575,27 +573,22 @@ public abstract class Critter {
 	/**
 	 * Clear the world of all critters, dead and alive
 	 */
-	public static void clearWorld() { //???
+	public static void clearWorld() { 
 		population.clear();
 		updatePositions();
 	}
 	
 	public static void updatePositions() {
-		positions.clear();
-		//System.out.println("updating world");
-		//Set<Integer[]> keys = positions.keySet();
+		positions.clear();	
 		for(Critter c: population) {
 			Key po = new Key(c.x_coord,c.y_coord);
-//			Integer [] po = new Integer [2];
-//			po[0]=c.x_coord; po[1] = c.y_coord;
-			
 			if(!(positions.containsKey(po))) {
 				List <Critter> clist = new ArrayList<Critter>();
 				clist.add(c);
 				positions.put(po, clist);
-				//System.out.println("doesn't contain key");
+				
 			}else {
-				//System.out.println("contains key");
+				
 				List <Critter> clist = positions.get(po);
 				clist.add(c);
 				positions.put(po, clist);
@@ -622,15 +615,13 @@ public abstract class Critter {
 				int nextOp = 1;
 				Critter a = crit.get(0);
 				Critter b = crit.get(nextOp);
-				if((a.energy > 0) && (b.energy > 0) && (a.x_coord == b.x_coord) && (a.y_coord == b.y_coord)){
+				while(nextOp < crit.size()){
+					b = crit.get(nextOp);
 					a.inFight = true;
 					b.inFight = true;
-					//System.out.println("Fighting");
-					//System.out.println("a energy " + a.energy + " b energy " +b.energy);
-					while(nextOp < crit.size()) {
-						b = crit.get(nextOp);
-						aFight = a.fight(b.toString());
-						bFight = b.fight(a.toString());
+					aFight = a.fight(b.toString());
+					bFight = b.fight(a.toString());
+					if((a.energy > 0) && (b.energy > 0) && (a.x_coord == b.x_coord) && (a.y_coord == b.y_coord)) {
 						if(!aFight) {
 							aDice = 0;
 						}else {
@@ -642,33 +633,29 @@ public abstract class Critter {
 							bDice = Critter.getRandomInt(b.energy);
 						}
 						if(aDice >= bDice) { //remove loser?
-							//System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is b");
 							a.energy = a.energy + (b.energy/2);
-							b.energy = 0;
-							//System.out.println("a energy " + a.energy + "b energy " +b.energy);
+							population.remove(b);
 						}
 						if(bDice > aDice) {
-							//System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is a");
 							b.energy = b.energy + (a.energy/2);
-							a.energy = 0;
-							//System.out.println("a energy " + a.energy + " b energy " +b.energy);
+							population.remove(a);
 							a = b;
-							
 						}
-						nextOp ++;
+						
 					}
+					nextOp ++;
 				}
 			}
 			
 		}
 		for(Critter c: population) {
-			//System.out.println(population.size());
+
 			c.energy = c.energy - Params.rest_energy_cost;
 		}
 		
 		
 		for(int i=0;i<population.size();i++) {
-			//System.out.println(population.size());
+
 			if(population.get(i) != null)
 			{
 				if(population.get(i).energy <= 0) {
@@ -696,15 +683,13 @@ public abstract class Critter {
 			System.out.print("-");
 		}
 		System.out.println("+");
-		//Set<Integer[]> keys = positions.keySet();
+
 		for(int row=0;row<Params.world_height;row++) {
 			System.out.print("|");
-			//Integer [] pos = new Integer [2];
-			
+
 			for(int col=0; col < Params.world_width; col++) {
 				Key pos = new Key(col,row);
-//				pos[0]=col;
-//				pos[1]=row;
+
 				if(positions.containsKey(pos)) {
 					List <Critter> c = positions.get(pos);
 					Critter cr = c.get(0);
@@ -713,16 +698,6 @@ public abstract class Critter {
 					System.out.print(" ");
 				}
 				
-//				boolean printed = false;
-//				for(Critter c: population) {
-//					if (c.x_coord==col && c.y_coord==row &&!printed) {
-//						System.out.print(c.toString());
-//						printed = true;
-//					}
-//				}
-//				if(!printed) {
-//					System.out.print(" ");
-//				}
 			}		
 			System.out.println("|");
 		}

@@ -1,4 +1,15 @@
 package assignment4;
+/* CRITTERS Key.java
+* EE422C Project 4 submission by
+* Kayla Tran
+* knt627
+* 16345
+* Arvin Bhatti
+* ab62733
+* 16345
+* Slip days used: <2>
+* Fall 2018
+*/
 
 public class Key {
 	private int x_pos;
