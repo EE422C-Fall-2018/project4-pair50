@@ -14,6 +14,9 @@ package assignment4;
 
 import java.util.List;
 import java.util.Scanner;
+
+import assignment4.Critter.TestCritter;
+
 import java.io.*;
 
 
@@ -72,6 +75,7 @@ public class Main {
         /* Write your code below. */
         
         while(true) {
+        	
         	System.out.print("critters>");
         	//System.out.println(Critter.positions.keySet());
         	String input = kb.nextLine(); //kb.next();
@@ -88,7 +92,11 @@ public class Main {
         			}
         			continue;
         		case("show"):
+        			if(command.length > 1) {
+        				System.out.println("error processing: " + input);
+        			}else {
         			Critter.displayWorld();
+        			}
         		continue;
         		case("step"):
         			if(command.length > 2) {
@@ -119,7 +127,7 @@ public class Main {
         					int seed = Integer.parseInt(command[1]);
                 			Critter.setSeed(seed);
         				}
-        				catch(NumberFormatException e) {
+        				catch(Exception e) { //numformatexception?
             					System.out.println("error processing: " + input);
             				}
         			}
@@ -134,7 +142,7 @@ public class Main {
         					for(int i=0;i<num;i++) {
         						Critter.makeCritter(command[1]);
         					}
-							
+							Critter.updatePositions();
 						} catch (Exception e) {//exception right?
 							System.out.println("error processing: " + input); 
 						}
@@ -155,26 +163,19 @@ public class Main {
         				List<Critter> result = null;
         				try {
         					result = Critter.getInstances(in);
+        					Class<?> crit = null;
+    						Class [] list = new Class[1];
+    						list[0] = java.util.List.class;
+    						crit = Class.forName(myPackage + "." + in);
+							java.lang.reflect.Method runStats = crit.getMethod("runStats", list);
+							runStats.invoke(crit, result);
         					
     						}
     						
-    					catch (InvalidCritterException e) {
+    					catch (Exception e) {
     						System.out.println("error processing: " + input);
     					}
-        				
-        			
-        				
-
-        				Class<?> crit = null;
-						Class [] list = new Class[1];
-						list[0] = java.util.List.class;
-						try {
-							crit = Class.forName(myPackage + "." + in);
-							java.lang.reflect.Method runStats = crit.getMethod("runStats", list);
-							runStats.invoke(crit, result);
-						}catch(Exception e) {
-							e.printStackTrace();
-						}
+      
         			}
 					
 	        		continue;

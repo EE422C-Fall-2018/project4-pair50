@@ -31,7 +31,8 @@ public abstract class Critter {
 	private	static List<Critter> population = new java.util.ArrayList<Critter>();
 	private static List<Critter> babies = new java.util.ArrayList<Critter>();
 	public static HashMap <Key, List<Critter>> positions  = new HashMap<Key, List<Critter> >();
-	public static HashSet <String> c = new HashSet<String>();
+	//public static HashSet <String> c = new HashSet<String>();
+	
 	
 	
 	
@@ -68,7 +69,7 @@ public abstract class Critter {
 	private final int step(Character type, int steps, int initVal) {
 		
 		if(type.equals('x')) {
-			System.out.println("steps: x " + "step size: " + steps+ "initval" + initVal);
+			//System.out.println("steps: x " + "step size: " + steps+ "initval" + initVal);
 			initVal = initVal + steps;
 //			if(initVal >= Params.world_width || initVal < 0) {
 //				initVal = Math.abs(initVal % Params.world_width);
@@ -88,7 +89,7 @@ public abstract class Critter {
 			
 		}
 		if(type.equals('y')) {
-			System.out.println("steps: y " + "step size: " + steps+ " initval " + initVal);
+			//System.out.println("steps: y " + "step size: " + steps+ " initval " + initVal);
 			initVal = initVal + steps;
 //			if(initVal >= Params.world_height || initVal < 0) {
 //				initVal = Math.abs(initVal % Params.world_height);
@@ -107,22 +108,21 @@ public abstract class Critter {
 			}
 			
 		}
-		System.out.println("new pos" + initVal);
+		//System.out.println("new pos" + initVal);
 		return initVal;
 	}
 	
 	private final boolean hasCritterthere(int x, int y) {
-		System.out.println("hascritterthere");
+		//System.out.println("hascritterthere");
 		Key pos = new Key(x,y);
-//		Integer [] pos = new Integer [2];
-//		pos[0] = x;
-//		pos[1] = y;
 		
-		if(positions.get(pos).size() > 0){
-			return true;
-		}else {
-			return false;
+		List<Critter> crit = positions.get(pos);
+		for(Critter c: crit ) {
+			if(!(c.energy <= 0)) {
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	
@@ -371,7 +371,7 @@ public abstract class Critter {
 	}
 	
 	protected final void reproduce(Critter offspring, int direction) {
-		System.out.println("reproducing");
+		//System.out.println("reproducing");
 		if(!(this.energy > Params.min_reproduce_energy)) {
 			return;
 		}
@@ -431,38 +431,29 @@ public abstract class Critter {
 	 * @throws InvalidCritterException
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
-		if(c.isEmpty()) {
-			c.add("Algae");
-			c.add("Craig");
-			c.add("MyCritter1");
-			/*c.add("MyCritter2");
-			c.add("MyCritter3");
-			c.add("MyCritter4");
-			c.add("MyCritter5");*/
-			c.add("MyCritter6");
-			c.add("MyCritter7");
-			c.add("ArvinCritter1");
-		}
+		
 		
 		//error no capital letter
 		Class<?> fefe = null;
-		if(!c.contains(critter_class_name)) {
-			throw new InvalidCritterException(critter_class_name);
-		}
+
 		
 		try {
 			fefe  = Class.forName(Critter.myPackage + "." + critter_class_name);
 			Constructor<?> construct = fefe.getConstructor();
 			Object newcrit = construct.newInstance();
 			
+			if(!(newcrit instanceof Critter)) {
+				throw new InvalidCritterException(critter_class_name);
+			}
+			
 			((Critter) newcrit).x_coord = getRandomInt(Params.world_width);
 			((Critter) newcrit).y_coord = getRandomInt(Params.world_height);
 			((Critter) newcrit).energy = Params.start_energy;
 			((Critter) newcrit).moved = false;
-			System.out.println("new crit x coord:" + ((Critter)newcrit).x_coord);
-			System.out.println("new crit y coord:" + ((Critter)newcrit).y_coord);
+			//System.out.println("new crit x coord:" + ((Critter)newcrit).x_coord);
+			//System.out.println("new crit y coord:" + ((Critter)newcrit).y_coord);
 			population.add((Critter) newcrit);
-			updatePositions();
+			//updatePositions();
 			
 		} 
 		catch (Exception e) {
@@ -479,17 +470,21 @@ public abstract class Critter {
 	 */
 	public static List<Critter> getInstances(String critter_class_name) throws InvalidCritterException {
 		Class<?> crit = null;
+		List<Critter> instances = new java.util.ArrayList<Critter>();
+		
 		try {
 			crit = Class.forName(Critter.myPackage +"." + critter_class_name);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		List<Critter> instances = new java.util.ArrayList<Critter>();
- 		for (Critter a : population) {
-			if (crit.isInstance(a)) {
-				instances.add(a);
+			for (Critter a : population) {
+				if (crit.isInstance(a)) {
+					instances.add(a);
+				}
 			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+			return instances;
 		}
+		
+ 		
 		return instances;
 	}
 	
@@ -534,10 +529,12 @@ public abstract class Critter {
 		
 		protected void setX_coord(int new_x_coord) {
 			super.x_coord = new_x_coord;
+			updatePositions();
 		}
 		
 		protected void setY_coord(int new_y_coord) {
 			super.y_coord = new_y_coord;
+			updatePositions();
 			
 		}
 		
@@ -575,11 +572,12 @@ public abstract class Critter {
 	 */
 	public static void clearWorld() { //???
 		population.clear();
+		updatePositions();
 	}
 	
 	public static void updatePositions() {
 		positions.clear();
-		System.out.println("updating world");
+		//System.out.println("updating world");
 		//Set<Integer[]> keys = positions.keySet();
 		for(Critter c: population) {
 			Key po = new Key(c.x_coord,c.y_coord);
@@ -590,9 +588,9 @@ public abstract class Critter {
 				List <Critter> clist = new ArrayList<Critter>();
 				clist.add(c);
 				positions.put(po, clist);
-				System.out.println("doesn't contain key");
+				//System.out.println("doesn't contain key");
 			}else {
-				System.out.println("contains key");
+				//System.out.println("contains key");
 				List <Critter> clist = positions.get(po);
 				clist.add(c);
 				positions.put(po, clist);
@@ -601,7 +599,9 @@ public abstract class Critter {
 	}
 	
 	public static void worldTimeStep() {
-		
+		if(population == null || population.isEmpty()) {
+			return;
+		}
 		for(Critter c : population) {
 			c.moved = false;
 			c.doTimeStep();
@@ -618,8 +618,10 @@ public abstract class Critter {
 				Critter a = crit.get(0);
 				Critter b = crit.get(nextOp);
 				if((a.energy > 0) && (b.energy > 0) && (a.x_coord == b.x_coord) && (a.y_coord == b.y_coord)){
-					System.out.println("Fighting");
-					System.out.println("a energy " + a.energy + " b energy " +b.energy);
+					a.inFight = true;
+					b.inFight = true;
+					//System.out.println("Fighting");
+					//System.out.println("a energy " + a.energy + " b energy " +b.energy);
 					while(nextOp < crit.size()) {
 						b = crit.get(nextOp);
 						aFight = a.fight(b.toString());
@@ -635,16 +637,16 @@ public abstract class Critter {
 							bDice = Critter.getRandomInt(b.energy);
 						}
 						if(aDice >= bDice) { //remove loser?
-							System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is b");
+							//System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is b");
 							a.energy = a.energy + (b.energy/2);
 							b.energy = 0;
-							System.out.println("a energy " + a.energy + "b energy " +b.energy);
+							//System.out.println("a energy " + a.energy + "b energy " +b.energy);
 						}
 						if(bDice > aDice) {
-							System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is a");
+							//System.out.println("aDice is " + aDice + " bDice is " + bDice + "loser is a");
 							b.energy = b.energy + (a.energy/2);
 							a.energy = 0;
-							System.out.println("a energy " + a.energy + " b energy " +b.energy);
+							//System.out.println("a energy " + a.energy + " b energy " +b.energy);
 							a = b;
 							
 						}
@@ -655,28 +657,29 @@ public abstract class Critter {
 			
 		}
 		for(Critter c: population) {
+			//System.out.println(population.size());
 			c.energy = c.energy - Params.rest_energy_cost;
 		}
-		for(Critter c: babies) {
-			population.add(c);
-		}
-		babies.clear();
+		
 		
 		for(int i=0;i<population.size();i++) {
+			//System.out.println(population.size());
 			if(population.get(i).energy <= 0) {
 				population.remove(i);
 			}
 		}
-//		for(int i=0;i<Params.refresh_algae_count;i++) {
-//			try {
-//				Critter.makeCritter("Algae");//??? correct
-//				
-//			}
-//			catch(InvalidCritterException e) {
-//				e.printStackTrace();
-//			}
-//			
-//		}
+		for(int i=0;i<Params.refresh_algae_count;i++) {
+			try {
+				Critter.makeCritter("Algae");
+				
+			}
+			catch(InvalidCritterException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		population.addAll(babies);
+		babies.clear();
 	}
 	
 	public static void displayWorld() { //multiple on one position
