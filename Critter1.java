@@ -5,23 +5,19 @@ public class Critter1 extends Critter{
 	public String toString() {return "1";}
 
 	private int dir;
-	private int numFights;
+	private int sugma;
 	private boolean hasMoved;
 
 
 	public Critter1() {
 		dir = Critter.getRandomInt(8);
 		hasMoved = false;
-		numFights = 0;
+		sugma = 0;
 	}
 	
 	public boolean fight(String opponent) {
-		if (opponent.equals("project4.Alage")) { 
-			return true;
-		}
 		if (hasMoved == false) {
 			if(getEnergy() >= 100) {
-				numFights += 1;
 				return true;
 			}
 			else if(getEnergy() < 100) {
@@ -29,7 +25,6 @@ public class Critter1 extends Critter{
 				return false;
 			}
 		}
-		numFights += 1;
 		return true; 
 	}
 
@@ -37,32 +32,28 @@ public class Critter1 extends Critter{
 	public void doTimeStep() {
 
 		hasMoved = false;
-		if(getEnergy() < 10) { 
+		if(getEnergy() < 500) { 
 			walk(dir);
 			hasMoved = true;
 		}
 
-		if (getEnergy() >= 10 && getEnergy() < 50) {
-			walk(dir);
-			hasMoved = true;
-		}
-
-		if(getEnergy() >= 50) {
+		if(getEnergy() >= 500) {
 			walk(dir);
 			hasMoved = true;
 			Critter1 baby = new Critter1();
 			reproduce(baby, Critter.getRandomInt(8));
+			sugma++;
 		}
-		dir = getEnergy() * Critter.getRandomInt(8) % 8;
+		dir = Critter.getRandomInt(8);
 	}
 	
 	public static void runStats(java.util.List<Critter> list) {
-		int total_fights = 0 ;
+		int bofa = 0 ;
 		for(Object obj : list) {
 			Critter1 crit = (Critter1) obj;
-			total_fights += crit.numFights;
+			bofa += crit.sugma;
 		}
 		System.out.println(list.size() + "total Critter1s");
-		System.out.println("Total number of fights: " + total_fights);
+		System.out.println("Total number of offspring: " + bofa);
 	}
 }

@@ -41,18 +41,7 @@ public class Critter2 extends Critter {
 			
 	}
 
-	public static void runStats(java.util.List<Critter> list) {
-		int num_crits = 0;
-		int avg_energy = 0;
-		for (Object obj : list) {
-			num_crits ++;
-			 Critter2 r = ( Critter2) obj;
-			avg_energy += r.getEnergy();
-		}
-		avg_energy /= num_crits;
-		System.out.println(list.size() + "total Critter2s");
-		System.out.print("Average energy: " + avg_energy + "\n");
-	}
+	
 
 
 }
